@@ -122,8 +122,109 @@ Existing heterogeneous pipeline parallel training methods, such as Pipe-Torch[91
 These approaches maintain the same limitations, as they do not fully exploit the computational power and storage capacity of CPUs on each node in large-scale GPU clusters, thus failing to fully harness the parallel computing capability of supercomputers based on heterogeneous computing architectures.
 
 
-## PipeDream-2BW 
+## (PipeDream-2BW) D. Narayanan, A. Phanishayee, K. Shi, X. Chen, and M. Zaharia, “Memory-Efficient Pipeline-Parallel DNN Training,” in Proceedings of the 38th International Conference on Machine Learning, PMLR, Jul. 2021
+
+every input’s generated gradient does not need to be applied to weights **immediately**, and instead can be accumulated into a “coalesced” gradient to limit the number of weight versions maintained.
+
+### Double-Buffered Weight Updates (2BW)
+
+PipeDream-2BW uses the same weight version for an input’s forward and backward passes. Updates are accumulated over multiple microbatches before being applied at the granularity of a batch, limiting the number of weight versions generated and maintained.
+
+![11](./images/pipelines/Screenshot%202024-11-19%20at%2017.04.01.png)
+
+forward use new version, backward use older version
+
+## Chimera: Efficiently Training Large-Scale Neural Networks with Bidirectional Pipelines
+
+fully-packed bidirectional pipelines, sync method with less bubbles
+
+![11](./images/pipelines/Screenshot%202024-11-21%20at%2013.46.23.png)
+
+### Related work
+
+#### Bubbles in the pipeline
+
+For better convergence quality, synchronous approaches synchronize the gradients and flush the pipeline at the end of each training iteration.
+
+synchronous approaches lead to pipeline bubbles.
+
+Both GPipe and DAPPLE incur 2(D-1) bubbles (i.e., D-1 bubbles in the forward passes and D-1 bubbles in the backward passes).
+
+Chimera (this work) incurs D-2 bubbles (i.e., D/2-1 bubbles in the forward passes and D/2-1 bubbles in the backward passes).
+
+#### Memory consumption
+
+##### the weight parameters
+
+For GPipe and DAPPLE, each worker maintains the weights of one pipeline stage
+
+For GEMS and Chimera (with the default setting), each worker maintains the weights of two pipeline stages since there are two pipelines in two directions.
+
+PipeDream-2BW reduces the number of weight versions to be stashed to 2.
+
+##### the activations
+
+GEMS injects only one micro-batch at the beginning of the pipeline, and thus the activations of the forward pass on one microbatch are stored
+
+PipeDream, PipeDream-2BW, DAPPLE, and Chimera inject up to D micro-batches at the beginning of the pipeline, which scale well to large mini-batches.
+
+GPipe injects N micro-batches
+
+Chimera has an extra benefit of a more balanced activations memory consumption among the workers
+
+
+### THE SCHEME OF CHIMERA
+
+#### Bidirectional Pipelines
+
+![bidirect pipeline](./images/pipelines/Screenshot%202024-11-21%20at%2016.02.03.png)
+
+![hybrid](./images/pipelines/Screenshot%202024-11-21%20at%2016.03.06.png)
+
+#### More Micro-Batches
+
+![](./images/pipelines/Screenshot%202024-11-21%20at%2016.32.52.png)
+
+**forward doubling**
+
+Forward doubling removes the intermediate bubbles, but it leads to two times activation memory consumption and therefore may exceed the device memory capacity
+
+backward halving
+
+One more benefit for both forward doubling and backward halving is that they have more space to overlap p2p communication (in the forward passes) than the classic 1F1B schedule.
+
+#### Generalize to More than Two Pipelines
+
+Q = D / 2, let F denote the set of all the divisors of Q, including 1 and Q itself.
+
+For any f ∈ F , we can generate a scheme for Chimera, which combines f down pipelines and f up pipelines together and each pipeline has D/2f micro-batches scheduled by the 1F1B strategy.
 
 ## XPipe
+
+![xpipe](./images/pipelines/Screenshot%202024-11-22%20at%2017.11.15.png)
+
+we refer to the micro-batch with the minimum index as a bellwether.
+
+the weights version difference s to measure the number of weight updates between the current pipeline unit and the pipeline unit at which the T-th micro-batch on GPU 0 completes its training round trip.
+
+For forward pass :
+
+$$ s = round(\frac{size + T - (rank / 2) - 2}{T} ) $$
+
+for backward pass :
+
+$$ s= round(\frac{T+ \lfloor rank /2 \rfloor -1 }{T}) $$
+
+![model pred](./images/pipelines/Screenshot%202024-11-22%20at%2017.23.56.png)
+
+$$ \Delta W = \frac{ \bar v_{t} }{\sqrt{\bar{m_{t}}} + \epsilon }  $$
+
+$$ W_{t+1} = W_{t} + s * lr *  \Delta W $$
+
+![adam](./images/pipelines/Screenshot%202024-11-22%20at%2017.25.15.png)
+
+### Experiment
+
+
 
 ## ZB-H2
