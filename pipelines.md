@@ -172,7 +172,6 @@ GPipe injects N micro-batches
 
 Chimera has an extra benefit of a more balanced activations memory consumption among the workers
 
-
 ### THE SCHEME OF CHIMERA
 
 #### Bidirectional Pipelines
@@ -199,6 +198,16 @@ Q = D / 2, let F denote the set of all the divisors of Q, including 1 and Q itse
 
 For any f ∈ F , we can generate a scheme for Chimera, which combines f down pipelines and f up pipelines together and each pipeline has D/2f micro-batches scheduled by the 1F1B strategy.
 
+## PIPEFISHER: EFFICIENT TRAINING OF LARGE LANGUAGE MODELS USING  PIPELINING AND FISHER INFORMATION MATRICES
+
+We first collect the profile of the CUDA kernel execution times of the standard work (i.e., forward and backward) during a step of a pipeline schedule followed by K-FAC work (i.e., curvature, inversion, and precondition) on GPUs.
+
+Then we pick one work from the ‘queue’ of all the K-FAC work and assign it to a bubble if its duration is shorter than the bubble duration (otherwise, subsequent bubbles are utilized) according to the rules above. We repeat this procedure until all the K-FAC work are assigned to bubbles.
+
+Once all the KFAC work are assigned (and the queue becomes empty), we finalize the (static) schedule and use it repeatedly until the training is completed.
+
+![](./images/pipelines/Screenshot%202024-11-26%20at%2017.56.32.png)
+
 ## XPipe
 
 ![xpipe](./images/pipelines/Screenshot%202024-11-22%20at%2017.11.15.png)
@@ -223,8 +232,21 @@ $$ W_{t+1} = W_{t} + s * lr *  \Delta W $$
 
 ![adam](./images/pipelines/Screenshot%202024-11-22%20at%2017.25.15.png)
 
-### Experiment
+## ZERO BUBBLE (ALMOST) PIPELINE PARALLELISM
 
+![w](./images/pipelines/Screenshot%202024-11-26%20at%2015.13.16.png)
 
+For convenience, we use single letters B and W to denote these two computations respectively, and F to denote forward pass (Figure 1).
 
-## ZB-H2
+it is imperative that F and B from the same microbatch must still remain sequentially dependent across pipeline stages. However, W can be flexibly scheduled anywhere after the corresponding B of the same stage.
+
+![ww](./images/pipelines/Screenshot%202024-11-26%20at%2015.17.17.png)
+
+THE HEURISTIC ALGORITHM & Integer Linear Programming
+
+![2](./images/pipelines/Screenshot%202024-11-26%20at%2017.04.23.png)
+
+Empirically, achieving zero bubble requires approximately twice the activation memory compared to 1F1B
+
+## AvgPipe
+

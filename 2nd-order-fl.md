@@ -62,3 +62,4 @@ and choose the most important N layers as GAL
 exploit a neuron-wise aggregation of the FIM to indicate the importance score of Neuron μ in Layer l
 
 did not use 2nd-order info in local or server side weight update.
+
