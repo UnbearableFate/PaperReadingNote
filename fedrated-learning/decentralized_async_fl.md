@@ -82,4 +82,49 @@ result in delays and inconsistencies in the learning process
   - Sequential selection of nodes.
   - Random selection of nodes.
   - Scheme schedule selection of nodes.
-- 
+- Customizations of FedAvg and new techniques
+  - Decentralized Stochastic Gradient Descent (DSGD).
+  - `FedPGA` (Reading)
+  - Dynamic Average Consensus-based FL (DACFL).
+  - Split Learning
+  - Decentralized FedAvg with Momentum
+  - DeceFL
+- Optimization of Federation Communications
+  - different distributed optimization schemes aim to maintain acceptable convergence rates in terms of recurring iterations and device computation time.
+    - decentralized Alternating Direction Method of Multipliers (ADMM) [105], EXTRA [106], and ADMM based on Jacobi-Proximal [107].
+  - use an incremental learning method to reduce costs by activating and linking agents while keeping other nodes and links inactive.
+    - These include Random Walk ADMM (WADMM) [134], Parallel Random Walk ADMM (PW-ADMM) [123] and Walk Proximal Gradient (WPG) [135] which are commonly used in increment-based approaches.
+  - optimize the balance between improving the quality of the model and saving communication resources,
+    - These mechanisms typically offer an **independent selection of participants and fragments of the NN** to be transmitted, providing a promising alternative to traditional optimizations.
+- Regarding optimizing network overhead
+  - quantization and sparsification
+- Optimization of Federation Models:
+
+#### TRENDS, LESSONS LEARNED, AND OPEN  CHALLENGES
+
+##### TRENDS
+
+- Federation architectures, network topologies, and communication mechanisms are extensively studied.
+- Fully connected network topologies are widely applied to DFL scenarios 
+  - about 50% of the papers analyzed in the network topology fundamental belong to this approach.
+- The optimization of communications is predominant in recent work on DFL.
+
+##### Lessons Learned
+
+- The use of specific aggregation algorithms for DFL is still limited.
+- There is a limited number of solutions providing realistic federation benchmarks.
+- There is no consensus on frameworks in the literature for deploying DFL architectures.
+- There is a lack of literature using unsupervised learning in DFL architectures.
+
+##### Open Challenges
+
+- Improve the scalability of the solution when the number of participants in the federation increases.
+- Ensure the homogeneous participation of the constrained nodes in the federation.
+- Address participant mobility.
+- Create modular, scalable, and efficient frameworks for diverse application scenarios.
+- Handle heterogeneous datasets in decentralized participants.
+- Adapt the dynamic scheduling of the federated network to the application scenario.
+- Explore standardization activities for DFL.
+
+#### Conclusion
+
