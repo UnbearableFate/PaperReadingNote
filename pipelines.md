@@ -236,6 +236,8 @@ $$ W_{t+1} = W_{t} + s * lr *  \Delta W $$
 
 ![w](./images/pipelines/Screenshot%202024-11-26%20at%2015.13.16.png)
 
+![](./images/pipelines/Screenshot%202024-11-29%20at%2013.36.21.png)
+
 For convenience, we use single letters B and W to denote these two computations respectively, and F to denote forward pass (Figure 1).
 
 it is imperative that F and B from the same microbatch must still remain sequentially dependent across pipeline stages. However, W can be flexibly scheduled anywhere after the corresponding B of the same stage.
@@ -250,3 +252,32 @@ Empirically, achieving zero bubble requires approximately twice the activation m
 
 ## AvgPipe
 
+### Overview
+
+![](./images/pipelines/Screenshot%202024-11-29%20at%2012.35.45.png)
+
+
+### 
+![](./images/pipelines/Screenshot%202024-11-29%20at%2012.36.28.png)
+
+
+### Advance forward propagation
+![](./images/pipelines/Screenshot%202024-11-29%20at%2012.06.12.png)
+
+although advance forward propagation sacrifices partial memory of upstream GPUs in comparison to the 1F1B schedule, it is beneficial to performance after all.
+
+we can dilute the extra memory footprints via slicing a batch into more micro-batches. As long as the micro-batch size is small enough, the extra memory footprints are negligible.
+
+Moreover, the advance forward propagation is essentially a trade-off between the vanilla AFAB and 1F1B schedules, meaning it can degenerate into either one of them. On one hand, if, ideally, the communication overhead is minimal, then the number of micro-batches propagated forward in advance could be zero, i.e., equivalent to the 1F1B schedule. On the other hand, if the communication overhead is significant and the available memory is sufficient, then the schedule would perform the forward propagation of all micro-batches in advance, which is equivalent to the AFAB schedule.
+
+### Profiling-based Tuning Method
+
+the micro-batch number M and the parallel pipeline number N .
+
+the method consists of two phases, profiling and predicting.
+
+Profiling Performance and Memory
+
+
+
+![](./images/pipelines/Screenshot%202024-11-29%20at%2012.58.22.png)
