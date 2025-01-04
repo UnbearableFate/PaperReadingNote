@@ -19,16 +19,16 @@
 
 ##### weight stashing
 
-![gpipe](./images/pipelines/Screenshot%202024-11-14%20at%2017.04.05.png)
+![gpipe](../images/pipelines/Screenshot%202024-11-14%20at%2017.04.05.png)
 
 always use same version of weight because sync update
 
-![pipedream](./images/pipelines/Screenshot%202024-11-14%20at%2017.11.48.png)
+![pipedream](../images/pipelines/Screenshot%202024-11-14%20at%2017.11.48.png)
 
 requires storing one version of weights for each mini-batch that is in progress in the pipeline.
 
 - PipeDream-2BW
-![PipeDream-2BW](./images/pipelines/Screenshot%202024-11-14%20at%2017.26.30.png)
+![PipeDream-2BW](../images/pipelines/Screenshot%202024-11-14%20at%2017.26.30.png)
   - utilizes a technique called double-buffered weight updates (2BW).
   - With the 2BW technique, for a micro-batch that has just entered the pipeline, the latest weights are used for forward pass.
   - Meanwhile, for micro-batches already in the pipeline, 2BW employs the previously cached weights for backward propagation.
@@ -55,9 +55,9 @@ requires storing one version of weights for each mini-batch that is in progress 
 
 ### Comparison
 
-![note](./images/pipelines/Screenshot%202024-11-13%20at%2015.18.02.png)
+![note](../images/pipelines/Screenshot%202024-11-13%20at%2015.18.02.png)
 
-![comp](./images/pipelines/Screenshot%202024-11-13%20at%2015.10.41.png)
+![comp](../images/pipelines/Screenshot%202024-11-13%20at%2015.10.41.png)
 
 #### Bubble Ratio
 
@@ -130,7 +130,7 @@ every input’s generated gradient does not need to be applied to weights **imme
 
 PipeDream-2BW uses the same weight version for an input’s forward and backward passes. Updates are accumulated over multiple microbatches before being applied at the granularity of a batch, limiting the number of weight versions generated and maintained.
 
-![11](./images/pipelines/Screenshot%202024-11-19%20at%2017.04.01.png)
+![11](../images/pipelines/Screenshot%202024-11-19%20at%2017.04.01.png)
 
 forward use new version, backward use older version
 
@@ -138,7 +138,7 @@ forward use new version, backward use older version
 
 fully-packed bidirectional pipelines, sync method with less bubbles
 
-![11](./images/pipelines/Screenshot%202024-11-21%20at%2013.46.23.png)
+![11](../images/pipelines/Screenshot%202024-11-21%20at%2013.46.23.png)
 
 ### Related work
 
@@ -176,13 +176,13 @@ Chimera has an extra benefit of a more balanced activations memory consumption a
 
 #### Bidirectional Pipelines
 
-![bidirect pipeline](./images/pipelines/Screenshot%202024-11-21%20at%2016.02.03.png)
+![bidirect pipeline](../images/pipelines/Screenshot%202024-11-21%20at%2016.02.03.png)
 
-![hybrid](./images/pipelines/Screenshot%202024-11-21%20at%2016.03.06.png)
+![hybrid](../images/pipelines/Screenshot%202024-11-21%20at%2016.03.06.png)
 
 #### More Micro-Batches
 
-![](./images/pipelines/Screenshot%202024-11-21%20at%2016.32.52.png)
+![](../images/pipelines/Screenshot%202024-11-21%20at%2016.32.52.png)
 
 **forward doubling**
 
@@ -206,11 +206,11 @@ Then we pick one work from the ‘queue’ of all the K-FAC work and assign it t
 
 Once all the KFAC work are assigned (and the queue becomes empty), we finalize the (static) schedule and use it repeatedly until the training is completed.
 
-![](./images/pipelines/Screenshot%202024-11-26%20at%2017.56.32.png)
+![](../images/pipelines/Screenshot%202024-11-26%20at%2017.56.32.png)
 
 ## XPipe
 
-![xpipe](./images/pipelines/Screenshot%202024-11-22%20at%2017.11.15.png)
+![xpipe](../images/pipelines/Screenshot%202024-11-22%20at%2017.11.15.png)
 
 we refer to the micro-batch with the minimum index as a bellwether.
 
@@ -224,29 +224,29 @@ for backward pass :
 
 $$ s= round(\frac{T+ \lfloor rank /2 \rfloor -1 }{T}) $$
 
-![model pred](./images/pipelines/Screenshot%202024-11-22%20at%2017.23.56.png)
+![model pred](../images/pipelines/Screenshot%202024-11-22%20at%2017.23.56.png)
 
 $$ \Delta W = \frac{ \bar v_{t} }{\sqrt{\bar{m_{t}}} + \epsilon }  $$
 
 $$ W_{t+1} = W_{t} + s * lr *  \Delta W $$
 
-![adam](./images/pipelines/Screenshot%202024-11-22%20at%2017.25.15.png)
+![adam](../images/pipelines/Screenshot%202024-11-22%20at%2017.25.15.png)
 
 ## ZERO BUBBLE (ALMOST) PIPELINE PARALLELISM
 
-![w](./images/pipelines/Screenshot%202024-11-26%20at%2015.13.16.png)
+![w](../images/pipelines/Screenshot%202024-11-26%20at%2015.13.16.png)
 
-![](./images/pipelines/Screenshot%202024-11-29%20at%2013.36.21.png)
+![](../images/pipelines/Screenshot%202024-11-29%20at%2013.36.21.png)
 
 For convenience, we use single letters B and W to denote these two computations respectively, and F to denote forward pass (Figure 1).
 
 it is imperative that F and B from the same microbatch must still remain sequentially dependent across pipeline stages. However, W can be flexibly scheduled anywhere after the corresponding B of the same stage.
 
-![ww](./images/pipelines/Screenshot%202024-11-26%20at%2015.17.17.png)
+![ww](../images/pipelines/Screenshot%202024-11-26%20at%2015.17.17.png)
 
 THE HEURISTIC ALGORITHM & Integer Linear Programming
 
-![2](./images/pipelines/Screenshot%202024-11-26%20at%2017.04.23.png)
+![2](../images/pipelines/Screenshot%202024-11-26%20at%2017.04.23.png)
 
 Empirically, achieving zero bubble requires approximately twice the activation memory compared to 1F1B
 
@@ -254,15 +254,15 @@ Empirically, achieving zero bubble requires approximately twice the activation m
 
 ### Overview
 
-![](./images/pipelines/Screenshot%202024-11-29%20at%2012.35.45.png)
+![](../images/pipelines/Screenshot%202024-11-29%20at%2012.35.45.png)
 
 
 ### 
-![](./images/pipelines/Screenshot%202024-11-29%20at%2012.36.28.png)
+![](../images/pipelines/Screenshot%202024-11-29%20at%2012.36.28.png)
 
 
 ### Advance forward propagation
-![](./images/pipelines/Screenshot%202024-11-29%20at%2012.06.12.png)
+![](../images/pipelines/Screenshot%202024-11-29%20at%2012.06.12.png)
 
 although advance forward propagation sacrifices partial memory of upstream GPUs in comparison to the 1F1B schedule, it is beneficial to performance after all.
 
@@ -280,4 +280,4 @@ Profiling Performance and Memory
 
 
 
-![](./images/pipelines/Screenshot%202024-11-29%20at%2012.58.22.png)
+![](../images/pipelines/Screenshot%202024-11-29%20at%2012.58.22.png)

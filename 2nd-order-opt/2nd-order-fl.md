@@ -7,22 +7,22 @@
 [1] M. Al-Shedivat, J. Gillenwater, E. Xing, and A. Rostamizadeh, “Federated Learning via Posterior Averaging: A New Perspective and Practical Algorithms,” arXiv.org. Accessed: Apr. 17, 2024. [Online]. Available: https://arxiv.org/abs/2010.05273v4
 
 **Brief description** : Under the uniform prior, any global posterior distribution that exists decomposes into a product of local posteriors,
-![p](./images/global_P.png)
+![p](../images/global_P.png)
 
 (i) infer approximate local means and covariances, (stochastic gradient Markov chain Monte Carlo)
 (ii) communicate these to the server, 
-![client-> server](./images/p1.png)
+![client-> server](../images/p1.png)
 and (iii) compute the posterior mode
-![none](./images/p2.png)
+![none](../images/p2.png)
 
 2. FedFisher(2024)
 
 [1] D. Jhunjhunwala, S. Wang, and G. Joshi, “FedFisher: Leveraging Fisher Information for One-Shot Federated Learning,” Mar. 18, 2024, arXiv: arXiv:2403.12329. Accessed: Apr. 04, 2024. [Online]. Available: http://arxiv.org/abs/2403.12329
 
 **Brief description** : no necessary to compute local means and covariances, only local weights and Fisher needs.
-![log](./images/log_H.png)
+![log](../images/log_H.png)
 send local weights and Fishers to server,
-![fedfisher](./images/FedFisher.png)
+![fedfisher](../images/FedFisher.png)
 
 
 ## Newton-Type
@@ -31,10 +31,10 @@ send local weights and Fishers to server,
 
 **Brief description** : The client sends the compressed changes of parts of the Hessian matrix and the local gradients to the server. The server then updates the overall Hessian matrix and uses the local gradients to obtain the global parameters.
 
-![nl](./images/Newton-learn.png)
+![nl](../images/Newton-learn.png)
 
 [2] M. Safaryan, R. Islamov, X. Qian, and P. Richtárik, “FedNL: Making Newton-Type Methods Applicable to Federated Learning,” May 22, 2022, arXiv: arXiv:2106.02969. Accessed: Apr. 23, 2024. [Online]. Available: http://arxiv.org/abs/2106.02969
-![nl](./images/fedNL.png)
+![nl](../images/fedNL.png)
 
 ## (FibecFed) J. Liu et al., “Fisher Information-based Efficient Curriculum Federated Learning with Large Language Models,” Sep. 30, 2024, arXiv: arXiv:2410.00131. Accessed: Oct. 15, 2024.
 
@@ -54,7 +54,7 @@ parameter-efficient approaches for reducing the number of parameters within the 
 
 ### Methods
 
-![sys](./images/2nd-order-fl/FibecFed_sys.png)
+![sys](../images/2nd-order-fl/FibecFed_sys.png)
 
 (1) : Compute layer important score by calculating the output difference of a certain layer with two similar input data samples to indicate its resilience, which represents the importance score.
 and choose the most important N layers as GAL
