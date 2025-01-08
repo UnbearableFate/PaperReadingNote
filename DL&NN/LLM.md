@@ -22,7 +22,6 @@ $$
 A \gets A - \eta \cdot g_A, \quad B \gets B - \eta \cdot g_B
 $$
 
-
 ### UNDERSTANDING THE LOW-RANK UPDATES
 
 **WHICH WEIGHT MATRICES IN TRANSFORMER SHOULD WE APPLY LORA TO?**
@@ -44,3 +43,24 @@ Second, instead of repeating the top singular directions of W , ∆W only amplif
 Third, the amplification factor is rather huge
 
 the low-rank adaptation matrix potentially amplifies the important features for specific downstream tasks that were learned but not emphasized in the general pre-training model.
+
+## Attention Is All You Need
+
+The goal of reducing sequential computation
+
+the number of operations required to relate signals from two arbitrary input or output positions grows in the distance between positions
+
+Encoder: 
+
+1. multi-head self-attention mechanism
+2. MLP
+3. layer normalization
+
+Decoder:
+
+In addition to the two sub-layers in each encoder layer, the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack.
+
+### Attention
+
+An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors.
+
