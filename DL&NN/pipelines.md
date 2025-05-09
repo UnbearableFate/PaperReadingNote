@@ -278,6 +278,37 @@ the method consists of two phases, profiling and predicting.
 
 Profiling Performance and Memory
 
-
-
 ![](../images/pipelines/Screenshot%202024-11-29%20at%2012.58.22.png)
+
+
+## PipeOptim: Ensuring Effective 1F1B Schedule with  Optimizer-Dependent Weight Prediction
+
+![](./images/Screenshot%202025-05-09%20at%2016.51.22.png)
+
+### Weight prediction formula
+
+$$ \hat{W}_{t+s} \approx W_t - lr \cdot s \cdot \Delta W_t $$
+
+our focus then turns to how to compute `s` and ∆Wt to predict the future weights  Wˆ t+s when using Equation (3) as the weight prediction formula.
+
+#### Computation of s
+
+$$ s = D − rank − 1 $$
+
+#### Computation of $ \Delta W_t $
+
+![](./images/Screenshot%202025-05-09%20at%2017.01.07.png)
+
+
+
+
+#### vs. SpecTrain
+
+SpecTrain requires each mini-batch to execute weight prediction twice, both in the forward pass and backward propagation. While PipeOptim only performs one-time weight prediction at the forward pass, leading to less computation cost.
+
+
+#### EXPERIMENTAL RESULTS
+
+![](./images/Screenshot%202025-05-09%20at%2017.12.02.png)
+
+![](./images/Screenshot%202025-05-09%20at%2017.15.34.png)

@@ -1,0 +1,13 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS resource forks
+._*
+
+# macOS Finder attributes
+.Spotlight-V100
+.Trashes
+
+.vscode
