@@ -312,3 +312,25 @@ SpecTrain requires each mini-batch to execute weight prediction twice, both in t
 ![](./images/Screenshot%202025-05-09%20at%2017.12.02.png)
 
 ![](./images/Screenshot%202025-05-09%20at%2017.15.34.png)
+
+
+## XGrad: Boosting Gradient-Based Optimizers with  Weight Prediction
+
+Motivated by the fact that DNN weights are updated in a continuous manner and the update values calculated by each gradient-based optimizer should reflect the “correct” direction for updating the weights, we introduce weight prediction [20], [21] into the DNN training and, in particular, propose a general framework XGrad to boost the convergence of gradient-based optimizers and to improve the accuracy of DNN models.
+
+![](./images/Screenshot%202025-05-11%20at%2014.46.42.png)
+
+The key point is that XGrad can be regarded as an approximation of the extragradient (EG) method
+
+$$ \hat \theta \approx \theta - \gamma \cdot s \cdot \Delta \theta_{t+1} $$
+$$ \theta_{t+1} = \theta_{t} - \gamma \nabla_{ \theta } \mathcal{f}_t(\hat \theta)  $$
+
+
+
+### Experiment
+
+For most cases, XGrad can obtain better model accuracy than the base optimizer without weight prediction.
+
+Furthermore, the experiment results also demonstrate that on sophisticated tasks (e.g., BERTBASE and WGAN), the performance of XGrad varies sharply when selecting different weight prediction steps.
+
+This reveals that applying weight prediction is easy to mislead the optimization approach when training on sophisticated tasks.
